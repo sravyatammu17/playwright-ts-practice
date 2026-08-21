@@ -75,3 +75,38 @@ console.log('Relabelled button text:', relabelled);
 
 await expect(page.getByTestId('relabel-btn')).toHaveText('Clicked Label');
 });
+
+test('section 3: checkboxes and radio buttons 1', async ({ page }) => {
+  await page.goto('/practice');
+
+  // Individual checkbox
+  await page.getByRole('checkbox', { name: 'Checkbox A' }).check();
+  await expect(page.getByRole('checkbox', { name: 'Checkbox A' })).toBeChecked();
+
+  // Select All checks everything
+  await page.getByRole('checkbox', { name: 'Select all checkboxes' }).check();
+  await expect(page.getByRole('checkbox', { name: 'Checkbox A' })).toBeChecked();
+  await expect(page.getByRole('checkbox', { name: 'Checkbox B' })).toBeChecked();
+  await expect(page.getByRole('checkbox', { name: 'Checkbox C' })).toBeChecked();
+
+  // Unchecking one un-checks Select All (verified tri-state behavior)
+  await page.getByRole('checkbox', { name: 'Checkbox B' }).uncheck();
+  await expect(page.getByRole('checkbox', { name: 'Select all checkboxes' })).not.toBeChecked();
+
+  // Radio group
+  await page.getByRole('radio', { name: 'Radio one' }).check();
+  await expect(page.getByRole('radio', { name: 'Radio one' })).toBeChecked();
+  await expect(page.getByTestId('radio-result')).toHaveText('Selected: one');
+
+  // Reveal checkbox — we'll add the real assertion once you confirm the hidden text
+  // Reveal checkbox — actually reveals a hidden text element
+  await page.getByRole('checkbox', { name: 'Reveal checkbox' }).check();
+  await expect(page.getByRole('checkbox', { name: 'Reveal checkbox' })).toBeChecked();
+  await expect(page.getByTestId('revealed-text')).toBeVisible();
+  await expect(page.getByTestId('revealed-text')).toHaveText('Hidden text is now visible!');
+});
+
+test('section 4: dropdown and selects', async ({page}) => {
+  await page.goto('/practice');
+
+});
