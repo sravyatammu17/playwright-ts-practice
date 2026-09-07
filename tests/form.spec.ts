@@ -112,20 +112,21 @@
 // });
 
 
-import { test, expect } from '@playwright/test';
-import { PracticePage } from './pages/PracticePage.js';
+// tests/section1.spec.ts
+import { test, expect } from './fixtures';
 
-test.describe('Section 1: Basic Form Elements', () => {
-  let practicePage: PracticePage;
+const formTestCases = [
+  { title: 'standard valid data', name: 'John Doe', email: 'john@example.com' },
+  { title: 'name with special characters', name: "O'Brien-Smith", email: 'obrien@example.com' },
+  { title: 'long bio text', name: 'Jane Doe', email: 'jane@example.com' },
+];
 
-  test.beforeEach(async ({ page }) => {
-    practicePage = new PracticePage(page);
-    await practicePage.goto();
+test('fill and submit form with valid data', async ({ page, practicePage }) => {
+  await test.step('Verify initial state', async () => {
+    await expect(page.getByTestId('form-result')).toHaveText('Not submitted');
   });
 
-  test('fill and submit form with valid data', async ({ page }) => {
-    await expect(page.getByTestId('form-result')).toHaveText('Not submitted');
-
+  await test.step('Fill out the form', async () => {
     await practicePage.fillBasicForm({
       name: 'John Doe',
       password: 'Password123',
@@ -133,8 +134,10 @@ test.describe('Section 1: Basic Form Elements', () => {
       phone: '9876543210',
       bio: 'This is a sample bio for testing.',
     });
-    await practicePage.submitForm();
+  });
 
+  await test.step('Submit and verify success', async () => {
+    await practicePage.submitForm();
     await expect(page.getByTestId('form-result')).toHaveText('Form submitted successfully');
   });
 });

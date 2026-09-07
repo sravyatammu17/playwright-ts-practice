@@ -14,7 +14,7 @@
 // });
 
 import { test, expect } from '@playwright/test';
-import { PracticePage } from './pages/PracticePage.js';
+import { PracticePage } from './pages/PracticePage';
 
 test.describe('Section 11: iFrame', () => {
   let practicePage: PracticePage;
