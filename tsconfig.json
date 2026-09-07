@@ -1,19 +1,10 @@
 {
   "compilerOptions": {
-    "module": "nodenext",
-    "target": "esnext",
-    "types": ["node", "@playwright/test"],
-
-    "sourceMap": true,
-    "declaration": true,
-    "declarationMap": true,
-
+    "target": "ES2021",
+    "module": "commonjs",
     "strict": true,
-
-    "jsx": "react-jsx",
-
-    "isolatedModules": true,
-    "moduleDetection": "force",
-    "skipLibCheck": true
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
   }
 }

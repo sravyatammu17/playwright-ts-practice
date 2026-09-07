@@ -1,13 +1,19 @@
-import { Page, expect, } from '@playwright/test';
-import { BasePage } from './Basepage.js';
+import { Page, expect } from '@playwright/test';
+import { BasePage } from './Basepage';
 
 export class PracticePage extends BasePage {
   constructor(page: Page) {
-    super(page); // calls BasePage's constructor, sets up this.page
+    super(page);
   }
 
-  // ----- Section 1: Basic Form -----
-  async fillBasicForm(data: { name: string; password: string; email: string; phone: string; bio: string }) {
+  // ===== Section 1: Basic Form Elements =====
+  async fillBasicForm(data: {
+    name: string;
+    password: string;
+    email: string;
+    phone: string;
+    bio: string;
+  }) {
     await this.page.getByTestId('text-input').fill(data.name);
     await this.page.getByTestId('password-input').fill(data.password);
     await this.page.getByTestId('email-input').fill(data.email);
@@ -23,7 +29,7 @@ export class PracticePage extends BasePage {
     return this.page.getByTestId('form-result').textContent();
   }
 
-  // ----- Section 2: Buttons -----
+  // ===== Section 2: Button Interactions =====
   async clickSingleClickButton() {
     await this.page.getByRole('button', { name: 'Single click button' }).click();
   }
@@ -45,20 +51,67 @@ export class PracticePage extends BasePage {
     await this.page.getByTestId('relabel-btn').click();
   }
 
-  // ----- Section 3: Checkboxes & Radio -----
-  async checkAllCheckboxes() {
-    await this.page.getByRole('checkbox', { name: 'Select all checkboxes' }).check();
+  // ===== Section 3: Checkboxes & Radio Buttons =====
+  async checkCheckbox(name: string) {
+    await this.page.getByRole('checkbox', { name }).check();
   }
 
   async uncheckCheckbox(name: string) {
     await this.page.getByRole('checkbox', { name }).uncheck();
   }
 
+  async checkAllCheckboxes() {
+    await this.page.getByRole('checkbox', { name: 'Select all checkboxes' }).check();
+  }
+
   async selectRadio(name: string) {
     await this.page.getByRole('radio', { name }).check();
   }
 
-  // ----- Section 11: iFrame -----
+  async checkRevealCheckbox() {
+    await this.page.getByRole('checkbox', { name: 'Reveal checkbox' }).check();
+  }
+
+  // ===== Section 4: Dropdowns =====
+  async selectStandardDropdown(value: string) {
+    await this.page.getByRole('combobox', { name: 'Standard select' }).selectOption(value);
+  }
+
+  async selectMultipleOptions(values: string[]) {
+    await this.page.getByRole('listbox', { name: 'Multi select' }).selectOption(values);
+  }
+
+  async openCustomDropdownAndSelect(optionTestId: string) {
+    await this.page.getByRole('button', { name: 'Custom dropdown toggle' }).click();
+    await this.page.getByTestId(optionTestId).click();
+  }
+
+  async selectDynamicDropdown(value: string) {
+    await this.page.getByRole('combobox', { name: 'Dynamic options select' }).selectOption(value);
+  }
+
+  // ===== Section 6: Dynamic Content =====
+  async clickDisappearButton() {
+    await this.page.getByTestId('disappear-btn').click();
+  }
+
+  async clickChangeTextButton() {
+    await this.page.getByTestId('change-text-btn').click();
+  }
+
+  async clickIncrementButton() {
+    await this.page.getByTestId('increment-btn').click();
+  }
+
+  async clickLoadContentButton() {
+    await this.page.getByTestId('load-content-btn').click();
+  }
+
+  getInjectedListItems() {
+    return this.page.getByTestId('injected-list').locator('li');
+  }
+
+  // ===== Section 11: iFrame =====
   getIframe() {
     return this.page.frameLocator('[data-testid="practice-iframe"]');
   }
@@ -68,4 +121,19 @@ export class PracticePage extends BasePage {
     await frame.getByLabel('Inside iframe').fill(value);
     await frame.locator('#iframe-btn').click();
   }
+
+  // ===== Section 12: Shadow DOM =====
+  async fillAndSubmitShadowForm(value: string) {
+    // No special scoping needed — Playwright pierces shadow DOM automatically
+    await this.page.getByLabel('Shadow DOM input').fill(value);
+    await this.page.getByRole('button', { name: 'Shadow Submit' }).click();
+  }
+
+  // ===== Section 13: Drag & Drop =====
+  async dragSourceToDropZone() {
+  const source = this.page.getByTestId('drag-source');
+  const target = this.page.getByTestId('drop-zone');
+
+  await source.dragTo(target);
+}
 }
